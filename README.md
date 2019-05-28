@@ -5,8 +5,8 @@ escheme Object Systems
 
 The following nested sub-repositories contain two object systems.
 
-EOS -- an object system for escheme employing classes and generic functions.
+EOS -- classes and generic functions
 
-XOS -- a metaclass-based object system for escheme.
+XOS -- classes and methods (metaclass-based)
 
  
