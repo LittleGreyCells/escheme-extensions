@@ -1,0 +1,151 @@
+XOS Grammar -- Amplified
+
+The XOS grammar is deceptively simple. XOS primitives are expressed as 
+Scheme s-expressions, not in the rigid structural syntax many object-oriented
+languages impose. Successful use requires an understanding of the intent of 
+each primitive form. Let's review some common activities and how to achieve 
+them.
+
+1. Class Creation
+
+     (class 'new <ivars> [<cvars> [<super>]]) returns <class>
+
+       <cvars> := <vars>
+       <ivars> := <vars>
+       <vars>  := (<name> ... )
+       <super> := metaclass instance
+       <class> := metaclass instance
+
+   Ex) (define <foo> (class 'new '(c) '(a)))
+
+       <super>  defaults to ::object.
+
+2. Instance Creation
+
+     (<class> 'new [<arg>...])
+
+   Ex) (define f2 (<foo> 'new))
+
+3. Method Creation
+
+     (<class> 'method '<selector> '<params> '<body>)
+
+       <class>    := a metaclass instance
+       <selector> := symbol
+       <params>   := (symbol ...)
+       <body>     := list of s-expressions
+
+   Ex) (<foo> 'method 'inc '(val) 
+              '((slot-set! self 'a (+ (slot-ref self 'a) val)) self))
+
+       Every method implicitly defines a parameter "self" which is bound
+       to the receiving object.
+
+4. Method Invocation
+
+     (<object> '<selector> [<arg>...])
+
+     <object>   := class instance
+     <selector> := symbol
+     <arg>      := s-expression
+
+   The <selector> is used to find an implementation within the <object>'s 
+   <class> heirachy. When a method is found, <object> becomes the
+   first argument in the list of actual arguments.
+
+   Ex) (define f1 (<foo> 'new))
+       
+5. Instance Var Access
+
+     <get> := (slot-ref <instance> '<ivar>)
+     <set> := (slot-set! <instance> '<ivar> <value>)
+     <value>  := s-expression
+
+   Ex) (slot-ref f1 'a)
+       (slot-set! f1 'a 10)
+
+6. Class Var Access
+
+     <get> := (slot-ref <instance> '<cvar>)
+     <set> := (slot-set! <instance> '<cvar> <value>)
+     <value>  := s-expression
+
+   Ex) (slot-ref f1 'c)
+       (slot-set! f1 'c 200)
+
+7. Instance Initialization
+
+   If an 'init method exists, it will be invoked for the newly created object.
+
+     (<class> 'method 'init '<params> '<body>)
+
+       <params> := method signature (implicit "self" first param)
+       <body> := a list of s-expressions comprising the method body
+
+   Ex)  (<foo> 'method 'init '(val) '((slot-set! self 'a val) self))
+
+        The symbol "self" is bound to the receiving object and is
+	available in the body of the method.
+
+8. Invoking Overridden Methods
+
+   It is often desirable to invoke within the super class a method which
+   performs some actions the current method wishes not to repeat. Often
+   that method has the same name as the current. To avoid endless
+   recursion object-oriented languages provide the ability to
+   start the method lookup in the method's class superclass via a 
+   "send-super" service.
+
+     (send-super '<selector> [<args>...])
+
+   send-super must be called within a method body.
+
+   Ex) (define <bar> (class 'new '() '(b) <foo>))
+
+       (<bar> 'method 'init 
+       	       (lambda (self value) 
+	         (send-super 'init value)
+		 ...
+		 self))
+
+       (define b1 (<bar> 'new 0))
+
+
+Predefined Class and Object Methods
+
+   (<object> 'slots)
+   (<object> 'show)
+   (<object> 'init)
+
+   (<class> 'slots)
+   (<class> 'show)
+   (<class> 'super)
+   (<class> 'ivars)
+   (<class> 'cvars)
+   (<class> 'methods)
+   (<class> 'new [<args>...])
+   (<class> 'init '<ivars> ['<cvars> [<super>]])
+   (<class> 'method '<selector> '<params> '<body>)
+   (<class> 'remove '<selector>)
+
+
+Support Functions and Macros
+
+    (slot-ref <object> '<slot>)           ;; function
+    (slot-set! <object> '<slot> <value)   ;; function
+    (object? <arg>)                       ;; function
+
+    (send-super '<selector> [<arg>...])   ;; macro
+
+Predefined Objects and Classes
+
+    ::object       ;; object
+    ::metaclass    ;; class
+
+EScheme Dependencies
+
+    macros
+    quasiquote
+    environments
+
+;; [EOF]
