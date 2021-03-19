@@ -18,8 +18,6 @@ In brief:
     and the closest conforming implementation is chosen.
 + The chosen function is called with the supplied arguments.
 
-It's that simple.
-
 In many object-systems, which are class-based, dispatch is based on the 
 first argument alone. In EOS all arguments, not just the first, participate 
 in selecting the function implementation. 
