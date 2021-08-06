@@ -177,7 +177,7 @@
 
 (define make-object
   (lambda (<class>)
-    (let ((env (%make-environment (class-get-vars <class>) nil)))
+    (let ((env (%make-environment (class-get-vars <class>) (the-global-environment))))
       (cons <class> env))))
 
 (define object?
