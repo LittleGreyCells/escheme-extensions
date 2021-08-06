@@ -18,7 +18,6 @@
 ;;   caution.
 ;;
 
-(chdir "/home/larry/Github/xos")
 (load "./xos.scm")
 
 (define (assert truth) 

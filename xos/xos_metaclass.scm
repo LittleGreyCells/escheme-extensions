@@ -15,7 +15,6 @@
 ;;   These methods permit a class to be used to reference cvars.
 ;;
 
-(chdir "/home/larry/Github/xos")
 (load "./xos.scm")
 
 (define (assert truth) 

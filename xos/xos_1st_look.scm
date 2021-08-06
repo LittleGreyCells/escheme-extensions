@@ -17,7 +17,6 @@
 ;;        load a simple assert function
 ;;
 
-(chdir "/home/larry/Github/xos")
 (load "./xos.scm")
 (define (assert truth) (if (not truth) (error "assertion failed") #t))
 
@@ -232,7 +231,7 @@
 (define (show-cvars <class>)
   (let ((env (<class> 'cvars))
 	(level 0))
-    (while env
+    (while (not (global-env? env))
        (display level)
        (display ": ")
        (print (environment-bindings env))

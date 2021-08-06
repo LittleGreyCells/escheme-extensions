@@ -159,7 +159,11 @@
   self)
 
 (define (all-symbols? x)
-  (if (null? x) #t (if (not (symbol? (car x))) #f (all-symbols? (cdr x)))))
+  (if (null? x)
+      #t
+      (if (not (symbol? (car x)))
+	  #f
+	  (all-symbols? (cdr x)))))
 
 (define (make-assoc x)
   (let (as)
@@ -167,6 +171,13 @@
        (set! as (cons (list (car x)) as))
        (set! x (cdr x)))
     as))
+
+(define (g:make-env <bindings> <benv>)
+  (%make-environment
+   <bindings>
+   (if (null? <benv>)
+       (the-global-environment)
+       <benv>)))
 
 (define (g:class-init self <ivars> . <rest>)
   (let ((slots (self 'slots))
@@ -193,7 +204,7 @@
     ;; assignment
     (::set-super slots <super>)
     (::set-ivars slots (append (<super> 'ivars) <ivars>))
-    (::set-cvars slots (%make-environment <cvars> (<super> 'cvars)))
+    (::set-cvars slots (g:make-env <cvars> (<super> 'cvars)))
 
     self))
  
@@ -201,7 +212,7 @@
 
 (define (g:object-new <class> . args)
   (let ((self nil)
-	(slots (%make-environment (cons '%%class (<class> 'ivars)) (<class> 'cvars)))
+	(slots (g:make-env (cons '%%class (<class> 'ivars)) (<class> 'cvars)))
 	)
     (let ((<this> 
 	   (lambda args
@@ -232,6 +243,7 @@
   (let ((<func> (g:find <selector> <class>))
 	(<args> (cons <self> <args>)))
     (apply <func> <args>)))
+
 
 ;;==================================================================================
 ;;
@@ -264,7 +276,7 @@
 
 (define (g:raw-object ivars benv)
   (let ((self nil)
-	(slots (%make-environment (cons '%%class ivars) benv)))
+	(slots (g:make-env (cons '%%class ivars) benv)))
     (let ((<this>
 	   (lambda args
 	     (let ((<selector> (car args)))
