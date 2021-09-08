@@ -1,7 +1,7 @@
-escheme Object Systems
+escheme Extensions
 ===
 
-The following nested sub-repositories contain two object systems.
+Extensions are contained in nested sub-repositories
 
 EOS -- a generic function based object system
 
