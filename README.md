@@ -1,10 +1,8 @@
-escheme Extensions
+escheme extensions
 ===
 
-Extensions are contained in nested sub-directories
+#### EMS -- a module system
 
-EOS -- a generic function based object system
+#### EOS -- a generic function based object system
 
-XOS -- a metaclass based object system
-
-EMS -- an escheme module system
+#### XOS -- a metaclass based object system
