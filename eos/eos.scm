@@ -25,8 +25,8 @@
 ;;       <init-list> := (<slot-name> <value>) (<slot-name> <value>) ...
 ;;        returns instance of <type>
 ;;
-;;    (slot-ref <slot-name> <object>)
-;;    (slot-set! <slot-name> <object> <value>)
+;;    (slot-ref <slot-name> <instance>)
+;;    (slot-set! <slot-name> <instance> <value>)
 ;;
 ;; Description
 ;;
@@ -263,12 +263,12 @@
 		 (sguard (caddr slot)))
 	     (if (not (symbol? sname))
 		 (error "parse-slot--slot name not a symbol" slot)
-		 (let ((type (symbol-value stype))
+		 (let ((type (%symbol-value stype))
 		       guard)
 		   (if (null? sguard)
 		       (set! guard nil)
 		       (if (bound? sguard)
-			   (set! guard (symbol-value sguard))
+			   (set! guard (%symbol-value sguard))
 			   (error "parse-slot--symbol is unboud" sguard)))
 		   (if (not (class? type))
 		       (error "parse-slot--slot type is not a class" stype)
@@ -313,7 +313,7 @@
 
 (define parse-super
   (lambda (super)
-    (let ((type (symbol-value super)))
+    (let ((type (%symbol-value super)))
       (if (class? type)
 	  type
 	  (error "parse-super:superclass is not a class" type)))))
@@ -324,7 +324,7 @@
 	  (parsed-slots (map parse-slot slots)))
       (let ((cx (make-class class super parsed-slots)))
 	(class-set-vars cx (class-generate-vars cx))
-	(set-symbol-value! class cx)
+	(%set-symbol-value! class cx)
 	;; parsed-slots = ( ((n . t) g) ((n . t) g) ... )
 	(while parsed-slots
 	   (let ((slot (car parsed-slots)))
@@ -511,7 +511,7 @@
 		    (let ((pname (car param))
 			  (ptype (cadr param)))
 		      (if (and (symbol? pname) (symbol? ptype))
-			  (let ((ptype (symbol-value ptype)))
+			  (let ((ptype (%symbol-value ptype)))
 			    (if (not (class? ptype))
 			      (error "parse-parameters--parameter type is not a class" slot)
 			      ;; PARAM (n . t)
@@ -531,7 +531,7 @@
     (let ((gf-func (make-generic-function params)))
       (let ((by-name (gf-store name params gf-func)))
 	(let ((global-gfunc-dispatcher (lambda args (gf-dispatch by-name args))))
-	  (set-symbol-value! name global-gfunc-dispatcher))
+	  (%set-symbol-value! name global-gfunc-dispatcher))
 	gf-func
 	))))
 
