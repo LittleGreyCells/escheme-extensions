@@ -1,12 +1,12 @@
 EMS
 ===
 
-EScheme Module System
+escheme Module System
 
 ## Introduction
 
 EMS is an approximate implemenation of the module
-system specified for STklos. Please see document STklosModuleSystem.txt
+system provided by STklos. Please see document STklosModuleSystem.txt
 for a fuller description of the service interfaces and semantics.
 
 
