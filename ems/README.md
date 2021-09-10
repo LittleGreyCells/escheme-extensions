@@ -12,24 +12,24 @@ for a fuller description of the service interfaces and semantics.
 
 ## Services
 ```
-   (module <name> <exp1> <exp2> ...)
-   (export <sym1> <sym2> ...)
-   (import <module-name1> <module-name2> ...)
+   (module <module-name> {<sexpr>}* )   -> <module-name>      (macro)
+   (export {<symbol>*})                 -> nil                (macro)
+   (import {<module-name>}*)            -> nil                (macro)
+   (all-modules)                        -> <assoc-list>       (function)
+   (find-module <module-name>)          -> <module>           (function)
+   (current-module)                     -> <module>           (function)
+   (module-name <module>)               -> <symbol>           (function)
+   (module-imports <module>)            -> <module-name-list> (function)
+   (module-exports <module>)            -> <symbol-list>      (function)
+   (module-symbols <module>)            -> <symbol-list>      (function)
+   (imported-symbol? <symbol> <module>) -> <boolean>          (function)
+   (symbol-value <symbol> <module> [<default>])  -> <sexpr>   (function)
+   (symbol-value* <symbol> <module> [<default>]) -> <sexpr>   (function)
+   (in-module <module-name> <symbol>)            -> <sexpr>   (function)
+   (select-module <module-name>)                              (macro)
 
-   (all-modules)                     returns <list-of-name-module-pairs>
-   (find-module <module-name>)       returns <module>
-   (current-module)                  returns <module>
-   (module-name <module>)            returns <symbol>
-   (module-imports <module>)         returns <list-of-module-names>
-   (module-exports <module>)         returns <list-of-symbols>
-   (module-symbols <module>)         returns <list-of-symbols>
-   (imported-symbol? <sym> <module>) returns <boolean>
-
-   (symbol-value <sym> <module> [<default>])  returns <value>
-   (symbol-value* <sym> <module> [<default>]) returns <value>
-   (in-module <module-name> <sym-name>)       returns <value>
-
-   (select-module <module-name>)
+   Where:
+      <module-name> := <symbol>
 ```
 ## Implemenation
 

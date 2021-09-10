@@ -5,7 +5,7 @@ EScheme Object System
 
 ## Introduction
 
-EOS is an experimental object system for escheme employing classes and generic 
+EOS is a Dylan inspired object system for escheme employing classes and generic 
 functions. EOS uses multi-dispatch to select the generic function implemenation
 for dispatch. 
 
@@ -28,44 +28,36 @@ is chosen.  The next ranking candidate function can be called using the
 support function "next-function". This is not quite the same as "send-super" 
 but may under certain circumstances behave similarly.
 
-## Genesis
-
-Dylan inspired.
-
 ## Grammar
 
-1. Class Definition
-   ```
-    (define-class <name> <basetype> <slots>)
-  
-       <slots> := ( <slot> ... )
-       <slot> := ( <name> <type> [<value-guard-function>]) | <name>
-    ```
-2. Generic Function Definition
-    ```
-    (define-generic-function <name> <formals>)
+```
+   (define-class <name> <base-type> <slots>)  -> <name>      (macro)  
+   (define-generic-function <name> <formals>) -> <gfunction> (macro)
+   (define-function <name> <formals> <body>)  -> <function>  (macro)
+   (function <formals> <body>)                -> <function>  (macro) 
+   (make <type> {(<slot-name> <value>)}*)     -> <instance>  (macro)   
+   (slot-ref <slot-name> <instance>)          -> <value>     (macro)
+   (slot-set! <slot-name> <instance> <value>) -> <value>     (macro)
+   (next-function)                            -> <sexpr>     (function)
 
-       <formals> := (<formal> ...)
-       <formal> := (<name> <type>) | <name>
-    ```
-3. Function Definition
-   ```
-    (define-function <name> <formals> <body>)
-
-       <body> := <symbolic-expressions>
-
-    (function <formals> <body>)
-   ```
-4. Instance Creation
-   ```
-    (make <type> [<init-list>])
-
-       <init-list> := (<slot-name> <value>) (<slot-name> <value>) ...
-   ```
-5. Invoking Other Candidates
-   ```
-   (next-function)
-   ```
+   Where:
+      <name> := <symbol>
+      <base-type> := <class-name> 
+      <sexpr> := escheme symbolic expression
+      <value> := <sexpr>
+      <slot> := ( <slot-name> <type> [<value-guard>]) | <slot-name>
+      <slots> := {<slot>}*
+      <gfunction> := <closure>
+      <function> := <closure>
+      <type> := name of eos class type
+      <slot-name> := <symbol>
+      <value-guard> := predicate function
+      <formals> := (<formal> ...)
+      <formal> := (<name> <type>) | <name>
+      <body> := {<sexpr>*}
+      <instance> := eos class type instance
+    
+```
 
 CAUTION
 

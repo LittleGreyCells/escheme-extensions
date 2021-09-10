@@ -31,17 +31,33 @@ are very similar, but there are some differences:
 
 ## Grammar
 
+```
+   (class 'new '<ivars> ['<cvars> [<super>]])      -> <class>    (function) 
+   (<class> 'new [<arg>...])                       -> <instance> (function)
+   (<class> 'method '<selector> '<params> '<body>) -> <selector> (function)   
+   (slot-ref <instance> '<var>)                    -> <value>    (function)
+   (slot-set! <instance> '<var> <value>)           -> <value>    (function)
+   (<class> 'method 'init '<params> '<body>)       -> init       (function)     
+   (send-super '<selector> [<arg>...])             -> <sexpr>    (macro)
+
+   Where:
+      <ivars> := <symbol-list>
+      <cvars> := <symbol-list>
+      <super> := <class>
+      <class> := <closure>
+      <arg>   := <sexpr>
+      <selector> := <symbol>
+      <params> := <symbol-list>
+      <body> := <sexpr-list>
+      <instance> := <closure>
+      <var> := <symbol>
+      <value> := <sexpr>
+```
+
 1. Class Creation
 
      ```
      (class 'new '<ivars> ['<cvars> [<super>]])
-     ```
-     ```
-       returns <class>
-       <ivars> := list of symbols
-       <cvars> := list of symbols
-       <super> := a class
-       <class> := a class
      ```
 
 2. Instance Creation
@@ -49,19 +65,11 @@ are very similar, but there are some differences:
      ```
      (<class> 'new [<arg>...])
      ```
-     ```
-        returns an instance of <class>
-     ```
 
 3. Method Creation
 
      ```
      (<class> 'method '<selector> '<params> '<body>)
-     ```
-     ```
-       <selector> := symbol
-       <params> := list of symbols
-       <body> := list of s-expressions
      ```
 
 4. Method Invocation
