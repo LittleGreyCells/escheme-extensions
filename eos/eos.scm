@@ -442,7 +442,6 @@
     (display "  sig: ")
     (display (get-printable-params (get-function-sig x)))
     (display ", imp: ")
-    ;; (print (gf-imp-image (get-function-imp x)))))
     (print (get-function-imp x))))
 
 (define gf-sig-show
@@ -459,7 +458,6 @@
 	     (display "  nargs: ")
 	     (print (car x))
 	     (let ((x (cdr x)))
-	       ;; (gf-sig-show (gf-get-sig x))
 	       (map gf-imp-show (gf-get-imps x))
 	       ))))
       (map gf-show-n-entry (gf-get-entry x)))))
