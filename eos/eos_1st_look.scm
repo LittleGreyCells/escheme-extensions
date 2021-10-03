@@ -128,6 +128,18 @@
 (next-function)  ;; next in order is instance: ((a <object>)), imp: (0); return 0
 (next-function)  ;; no next function, so an error
 
+(define-method fran ((a <object>) n) (* n 1))
+(define-method fran ((a <foo>) n) (* n 2))
+(define-method fran ((a <bar>) n) (* n 3))
+
+(generic-functions-show)
+
+(fran b1 10)
+
+(next-function b1 100)  ;; next in order is instance: ((a foo) n), imp: (* n 2); return 200
+(next-function b1 100)  ;; next in order is instance: ((a <object>) n), imp: (n); return 100
+(next-function b1 100)  ;; no next function, so an error
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Mixed-mode Arithmetic
@@ -189,7 +201,7 @@
 ;;
 ;; Is EOS needed? 
 ;;
-;; Native scheme provides adequate implemenation primitives. Lists and 
+;; Native scheme provides adequate implemenation primitives -- lists and 
 ;; vectors can be used for data structuring. Functions can be used for 
 ;; interface operations. Naming can make clear which operations should be 
 ;; grouped together. See the EOS implementation. Environments and higher 

@@ -10,6 +10,7 @@
 ;;    (make <type> [<value> ...])
 ;;    (slot-ref <slot-name> <instance>)
 ;;    (slot-set! <slot-name> <instance> <value>)
+;;    (next-method [<sexpr> ...])
 ;;
 ;;    Where:
 ;;       <name> := scheme symbol
@@ -18,7 +19,8 @@
 ;;       <slot> := ( <name> <type> [<value-guard>]) | <name>
 ;;       <formals> := (<formal> ...)
 ;;       <formal> := ( <name> <type> ) | <name>
-;;       <body> := scheme symbolic expressions
+;;       <body> := [<sexpr> ...]
+;;       <sexpr> := escheme symbolic expression
 ;;
 ;; Description
 ;;
@@ -31,7 +33,7 @@
 ;;
 ;;    macro make
 ;;      creates and returns an <instance> of <type>
-;;      values are passed to an init method
+;;      values are passed to an init method which should be defined for each <type>
 ;;
 ;;    macro slot-ref
 ;;      references and returns a slot value of <object>
@@ -699,7 +701,7 @@
 	(error "no next function"))
     (let ((closure (get-function-imp (vector-ref cv-vector (+ cv-current 1)))))
       (set! cv-current (+ cv-current 2))
-      (apply closure cv-args)
+      (apply closure (if args args cv-args))
       )))
 
 ;; [End of Function Dispatch]
