@@ -13,18 +13,18 @@ In brief:
 
 + Classes define types.
 + Generic functions define function patterns.
-+ Functions define implementations of generic functions.
++ Methods define implementations of generic functions.
 + Generic functions are called with varying argument lists
-    and the closest conforming implementation is chosen.
-+ The chosen function is called with the supplied arguments.
+    and the closest conforming method is chosen.
++ The chosen method is called with the supplied arguments.
 
 In many object-systems, which are class-based, dispatch is based on the 
 first argument alone. In EOS all arguments, not just the first, participate 
-in selecting the function implementation. 
+in selecting the mthod implementation. 
 
-Multi-dispatch is expensive, but in practice the number of candidate functions
+Multi-dispatch is expensive, but in practice the number of candidate methods
 is small. All the candidates must be ranked and the best matchinging candidate
-is chosen.  The next ranking candidate function can be called using the 
+is chosen.  The next ranking candidate method can be called using the 
 support function "next-function". This is not quite the same as "send-super" 
 but may under certain circumstances behave similarly.
 
@@ -32,22 +32,19 @@ but may under certain circumstances behave similarly.
 
 ```
    (define-class <name> <base-type> <slots>)  -> <name>      (macro)  
-   (define-generic-function <name> <formals>) -> <gfunction> (macro)
-   (define-function <name> <formals> <body>)  -> <function>  (macro)
-   (function <formals> <body>)                -> <function>  (macro) 
-   (make <type> {(<slot-name> <value>)}*)     -> <instance>  (macro)   
+   (define-method <name> <formals> <body>)    -> <function>  (macro)
+   (make <type> {<value>)}*)                  -> <instance>  (macro)   
    (slot-ref <slot-name> <instance>)          -> <value>     (macro)
    (slot-set! <slot-name> <instance> <value>) -> <value>     (macro)
-   (next-function)                            -> <sexpr>     (function)
+   (next-function {<sexpr>}* )                -> <sexpr>     (function)
 
    Where:
       <name> := <symbol>
-      <base-type> := <class-name> 
+      <base-type> := <type> 
       <sexpr> := escheme symbolic expression
       <value> := <sexpr>
       <slot> := ( <slot-name> <type> [<value-guard>]) | <slot-name>
       <slots> := {<slot>}*
-      <gfunction> := <closure>
       <function> := <closure>
       <type> := name of eos class type
       <slot-name> := <symbol>
