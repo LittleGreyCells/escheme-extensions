@@ -28,15 +28,31 @@ is chosen.  The next ranking candidate method can be called using the
 support function "next-function". This is not quite the same as "send-super" 
 but may under certain circumstances behave similarly.
 
+Slots are typically accessed via generic accessor methods that are automatically
+generated:
+```
+getter = (<slot-name> <object>) returns <value> stored in slot
+setter = ((setter <slotname>) <object> <value>) returns <value>
+```
+
+Two raw accessor non-method functions are also provide:
+```
+(slot-ref <object> <slot-name>)
+(slot-set! <object> <slot-name> <value>)
+```
+
+The advantage of using a setter method is that, if a value guard function is defined, 
+it will be called to check the assigned value.
+
 ## Grammar
 
 ```
    (define-class <name> <base-type> <slots>)  -> <name>      (macro)  
    (define-method <name> <formals> <body>)    -> <function>  (macro)
    (make <type> {<value>)}*)                  -> <instance>  (macro)   
+   (next-function {<sexpr>}* )                -> <sexpr>     (method)
    (slot-ref <slot-name> <instance>)          -> <value>     (macro)
    (slot-set! <slot-name> <instance> <value>) -> <value>     (macro)
-   (next-function {<sexpr>}* )                -> <sexpr>     (function)
 
    Where:
       <name> := <symbol>
