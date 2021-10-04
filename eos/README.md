@@ -11,7 +11,7 @@ for dispatch.
 
 In brief:
 
-+ Classes define types.
++ Classes define types consisting of slots.
 + Generic functions define function patterns.
 + Methods define implementations of generic functions.
 + Generic functions are called with varying argument lists
