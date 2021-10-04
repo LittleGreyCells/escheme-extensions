@@ -51,39 +51,39 @@
 ;;=========================================================
 ;; Classes and Objects
 ;;
-;;    Class representation
-;;    Class construction
-;;    Object representation
-;;    Object construction
-;;    Class parsing
-;;    Class definition
+;;   Class representation
+;;   Class construction
+;;   Object representation
+;;   Object construction
+;;   Class parsing
+;;   Class definition
 ;;
-;; syntax: (make-class cname super slots) --> class
-;; syntax: (class? arg) --> boolean
-;; syntax: (class-get-name class) --> symbol
-;; syntax: (class-get-super class) --> class
-;; syntax: (class-get-slots class) --> vector
-;; syntax: (class-get-vars class) --> list
-;; syntax: (class-set-vars class slots)
-;; syntax: (class-generate-vars class) --> list
-;; syntax: (slot-show slot)
-;; syntax: (class-show class)
-;; syntax: (class-image class) -> string
+;;   syntax: (make-class cname super slots) --> class
+;;   syntax: (class? arg) --> boolean
+;;   syntax: (class-get-name class) --> symbol
+;;   syntax: (class-get-super class) --> class
+;;   syntax: (class-get-slots class) --> vector
+;;   syntax: (class-get-vars class) --> list
+;;   syntax: (class-set-vars class slots)
+;;   syntax: (class-generate-vars class) --> list
+;;   syntax: (slot-show slot)
+;;   syntax: (class-show class)
+;;   syntax: (class-image class) -> string
 ;;
-;; syntax: (make-object class) --> object
-;; syntax: (object? arg) --> boolean
-;; syntax: (object-class object) --> class
-;; syntax: (object-env object) --> env
-;; syntax: (object-bindings object) --> bindings {association list}
-;; syntax: (object-image object) --> string
+;;   syntax: (make-object class) --> object
+;;   syntax: (object? arg) --> boolean
+;;   syntax: (object-class object) --> class
+;;   syntax: (object-env object) --> env
+;;   syntax: (object-bindings object) --> bindings {association list}
+;;   syntax: (object-image object) --> string
 ;;
-;; syntax: (subclass? class1 class2) --> boolean
-;; syntax: (deriv-distance class1 class2) --> fixnum
-;; syntax: (instance? object class) --> boolean
+;;   syntax: (subclass? class1 class2) --> boolean
+;;   syntax: (deriv-distance class1 class2) --> fixnum
+;;   syntax: (instance? object class) --> boolean
 ;;
-;; syntax: (parse-slot slot) -> parsed-slot-representation
-;; syntax: (parse-super class) --> class
-;; syntax: (fn:define-class class super slots) --> class
+;;   syntax: (parse-slot slot) -> parsed-slot-representation
+;;   syntax: (parse-super class) --> class
+;;   syntax: (fn:define-class class super slots) --> class
 ;;
 
 (define class-tag 'class)
@@ -366,7 +366,7 @@
 ;;
 ;;  Create a generic function named <name>
 ;;
-;;  We store generic functions on an association list by name and number.
+;;    We store generic functions on an association list by name and number.
 ;;
 ;;    <by-name> := ((<name> . <by-num>) ... )     [1st assoc-list]
 ;;    <by-num>  := ((<nargs> . <gentry>)) ... )   [2nd assoc-list]
