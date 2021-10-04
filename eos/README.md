@@ -25,7 +25,7 @@ in selecting the generic function implementation.
 Multi-dispatch is expensive, but in practice the number of candidate methods
 is small. All the candidates must be ranked and the best matchinging candidate
 is chosen.  The next ranking candidate method can be called using the 
-support function "next-method". This is not quite the same as "send-super" 
+support function "next-function". This is not quite the same as "send-super" 
 but may under certain circumstances behave similarly.
 
 Slots are typically accessed via accessor methods that are automatically
@@ -50,7 +50,7 @@ it will be called to check the assigned value.
    (define-class <name> <base-type> <slots>)  -> <name>      (macro)  
    (define-method <name> <formals> <body>)    -> <function>  (macro)
    (make <type> {<value>)}*)                  -> <instance>  (macro)   
-   (next-method {<sexpr>}* )                  -> <sexpr>     (method)
+   (next-function {<sexpr>}* )                -> <sexpr>     (method)
    (slot-ref <slot-name> <instance>)          -> <value>     (macro)
    (slot-set! <slot-name> <instance> <value>) -> <value>     (macro)
 
