@@ -235,7 +235,7 @@
 ;;
 
 ;;
-;; parsed-slots -> (((<slot-name> . <type>) <guard-function>) ...)
+;; parsed-slots -> (((<slot-name> . <type>) <value-guard-function>) ...)
 ;;
 
 (define parse-slot
@@ -335,46 +335,43 @@
 ;;    Generic function installation
 ;;    Function definition
 ;;
-
-;; syntax: (gf-find name params) --> ((nargs . <gentry>))
-;; syntax: (gf-store name params) --> ((name . <by-num>))
+;;    syntax: (gf-find name params) --> ((nargs . <gentry>))
+;;    syntax: (gf-store name params) --> ((name . <by-num>))
 ;;
-;; syntax: (make-generic-function params) --> (params)
-;; syntax: (gf-get-name by-name) --> symbol
-;; syntax: (gf-get-entry by-name) --> by-num
-;; syntax: (gf-get-sig gentry) --> sig
-;; syntax: (gf-get-imps gentry) --> imps
-;; syntax: (gf-set-sig gentry sig)
-;; syntax: (gf-set-imps gentry imps)
-;; syntax: (make-function sig imp) --> (sig . imp)
-;; syntax: (get-function-sig func) --> sig
-;; syntax: (get-function-imp func) --> imp
-;; syntax: (gf-add-imp gentry imp)
-;; syntax: (gf-imp-image imp) --> image
-;; syntax: (gf-imp-show imp)
-;; syntax: (gf-sig-show sig)
-;; syntax: (gf-show by-name)
-;; syntax: (generic-functions-show)
+;;    syntax: (make-generic-function params) --> (params)
+;;    syntax: (gf-get-name by-name) --> symbol
+;;    syntax: (gf-get-entry by-name) --> by-num
+;;    syntax: (gf-get-sig gentry) --> sig
+;;    syntax: (gf-get-imps gentry) --> imps
+;;    syntax: (gf-set-sig gentry sig)
+;;    syntax: (gf-set-imps gentry imps)
+;;    syntax: (make-function sig imp) --> (sig . imp)
+;;    syntax: (get-function-sig func) --> sig
+;;    syntax: (get-function-imp func) --> imp
+;;    syntax: (gf-add-imp gentry imp)
+;;    syntax: (gf-imp-image imp) --> image
+;;    syntax: (gf-imp-show imp)
+;;    syntax: (gf-sig-show sig)
+;;    syntax: (gf-show by-name)
+;;    syntax: (generic-functions-show)
 ;; 
-;; syntax: (parse-parameters params) -> normalized-parameters
-;; syntax: (install-generic-function name params)
-;; syntax: (gf-add-function fname imp)
-;; syntax: (fn:define-method fname fparams fbody)
-;; syntax: (make-closure fparams fbody)
-;; syntax: (check-type-eq gen imp) --> boolean
-;; syntax: (find-exact-signature params imps) --> imps
-;; syntax: (get-printable-params params) --> list-of-names-and-types
+;;    syntax: (parse-parameters params) -> normalized-parameters
+;;    syntax: (install-generic-function name params)
+;;    syntax: (gf-add-function fname imp)
+;;    syntax: (fn:define-method fname fparams fbody)
+;;    syntax: (make-closure fparams fbody)
+;;    syntax: (check-type-eq gen imp) --> boolean
+;;    syntax: (find-exact-signature params imps) --> imps
+;;    syntax: (get-printable-params params) --> list-of-names-and-types
 ;;
-
+;;  Create a generic function named <name>
 ;;
-;;   Create a generic function named <name>
+;;  We store generic functions on an association list by name and number.
 ;;
-;;   We store generic functions on an association list by name and number.
-;;
-;;     <by-name> := ((<name> . <by-num>) ... )     [1st assoc-list]
-;;     <by-num>  := ((<nargs> . <gentry>)) ... )   [2nd assoc-list]
-;;     <gentry>  := (<gsig> . <imps>)
-;;     <imps>    := ((<isig> . <imp>) ...)
+;;    <by-name> := ((<name> . <by-num>) ... )     [1st assoc-list]
+;;    <by-num>  := ((<nargs> . <gentry>)) ... )   [2nd assoc-list]
+;;    <gentry>  := (<gsig> . <imps>)
+;;    <imps>    := ((<isig> . <imp>) ...)
 ;;
 
 (define %gfuncs nil)
