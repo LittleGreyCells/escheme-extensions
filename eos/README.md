@@ -20,22 +20,22 @@ In brief:
 
 In many object-systems, which are class-based, dispatch is based on the 
 first argument alone. In EOS all arguments, not just the first, participate 
-in selecting the mthod implementation. 
+in selecting the generic function implementation. 
 
 Multi-dispatch is expensive, but in practice the number of candidate methods
 is small. All the candidates must be ranked and the best matchinging candidate
 is chosen.  The next ranking candidate method can be called using the 
-support function "next-function". This is not quite the same as "send-super" 
+support function "next-method". This is not quite the same as "send-super" 
 but may under certain circumstances behave similarly.
 
-Slots are typically accessed via generic accessor methods that are automatically
+Slots are typically accessed via accessor methods that are automatically
 generated:
 ```
 getter = (<slot-name> <object>) returns <value> stored in slot
 setter = ((setter <slotname>) <object> <value>) returns <value>
 ```
 
-Two raw accessor non-method functions are also provide:
+Two non-method functions are also provided for accessing slots:
 ```
 (slot-ref <object> <slot-name>)
 (slot-set! <object> <slot-name> <value>)
@@ -50,7 +50,7 @@ it will be called to check the assigned value.
    (define-class <name> <base-type> <slots>)  -> <name>      (macro)  
    (define-method <name> <formals> <body>)    -> <function>  (macro)
    (make <type> {<value>)}*)                  -> <instance>  (macro)   
-   (next-function {<sexpr>}* )                -> <sexpr>     (method)
+   (next-method {<sexpr>}* )                  -> <sexpr>     (method)
    (slot-ref <slot-name> <instance>)          -> <value>     (macro)
    (slot-set! <slot-name> <instance> <value>) -> <value>     (macro)
 
