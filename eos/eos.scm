@@ -10,7 +10,7 @@
 ;;    (make <type> [<value> ...])
 ;;    (slot-ref <slot-name> <instance>)
 ;;    (slot-set! <slot-name> <instance> <value>)
-;;    (next-method [<sexpr> ...])
+;;    (next-function [<sexpr> ...])
 ;;
 ;;    Where:
 ;;       <name> := scheme symbol
@@ -25,22 +25,27 @@
 ;; Description
 ;;
 ;;    macro define-class 
-;;      creates the class <name>
+;;      creates the class <name>.
 ;;
 ;;    macro define-method 
-;;      creates an implementation of generic function <name>
-;;      creates a generic function entry, if one does not exist
+;;      creates an implementation of generic function <name>.
+;;      creates a generic function entry, if one does not exist.
 ;;
 ;;    macro make
-;;      creates and returns an <instance> of <type>
-;;      values are passed to an init method which should be defined for each <type>
+;;      creates and returns an <instance> of <type>.
+;;      values are passed to an init method which should be defined for each <type>.
 ;;
 ;;    macro slot-ref
-;;      references and returns a slot value of <object>
+;;      references and returns a slot value of <object>.
 ;;
 ;;    macro slot-set!
-;;        assigns value to a slot of <object>
-;;        does not check for assignment compatibility
+;;      assigns value to a slot of <object>.
+;;      does not check for assignment compatibility.
+;;
+;;    function next-function
+;;      call the next conforming method.
+;;      if not arguments are supplied, use the existing arguments.
+;;      new arguments can be specified -- caution: guarantee type conformance.
 ;;
 
 ;;=========================================================
