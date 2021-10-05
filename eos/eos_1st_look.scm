@@ -92,13 +92,13 @@
 ;; define class <integer> deriving from <object>
 ;;   it has a member x of any type, but has a type predicate integer? to be applied
 ;;   when instances are created
-(define-class <integer> <object> ((x <object> integer?)))
+(define-class <integer> <object> ((x <object> integer? 0)))
 (class-show <integer>)
 (define-method init ((this <integer>) n) ((setter x) this n))
 
 ;; let's make some instances
 (define f1 (make <foo>))
-(define f3 (make <integer> 0))
+(define f3 (make <integer> 10))
 
 (object-class f1)
 (object-class f3)
