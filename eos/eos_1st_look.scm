@@ -6,7 +6,7 @@
 ;;   3. instance instantiation
 ;;   4. generic function lookup via internal function gf-find
 ;;       (this is normally not used)
-;;   5. use of next-function
+;;   5. use of next-method
 ;;   6. non-instance functions
 ;;
 ;; Directions
@@ -25,7 +25,7 @@
 ;;   since no type is associated with "x", it defaults to type <object>
 (define-class <foo> <object> (x))
 (class-show <foo>)
-(define-method init ((this <foo>) n) (slot-set! this x n))
+(define-method init ((this <foo>) n) ((setter x) this n))
 (define foo1 (make <foo> 10))
 (object-bindings foo1)
 
@@ -36,7 +36,9 @@
 ;; define class <bar> deriving from <foo>; introduce new slot of type <object>
 (define-class <bar> <foo> (y))
 (class-show <bar>)
-(define-method init ((this <bar>) n m) (slot-set! this x n) (slot-set! this y m))
+(define-method init ((this <bar>) n m)
+  ((setter x) this n)
+  ((setter y) this m))
 (define bar1 (make <bar> 10 20))
 (object-bindings bar1)
 
@@ -51,7 +53,7 @@
 (define-class <bob> <bar> (coffee milk))
 (class-show <bob>)
 
-;; define class <bill> deriving from <bob>; no new members are added
+;; define class <bill> deriving from <bob>; no new slots are added
 (define-class <bill> <bob> ())
 (class-show <bill>)
 
@@ -111,22 +113,22 @@
 ;; show slots and bound values
 (object-bindings f3)
 
-(next-function) ;; error -- no next function?
+(next-method) ;; error -- no next function?
 
 ;; call the generic function
 
 (mary f1)  ;; return 1
 (mary 1)   ;; return 0
 
-(next-function) ;; error -- no next function
+(next-method) ;; error -- no next function
 
 (define b1 (make <bar>))
 
 (mary b1)        ;; return 2
 
-(next-function)  ;; next in order is instance: ((a foo)), imp: (1); return 1
-(next-function)  ;; next in order is instance: ((a <object>)), imp: (0); return 0
-(next-function)  ;; no next function, so an error
+(next-method)  ;; next in order is instance: ((a foo)), imp: (1); return 1
+(next-method)  ;; next in order is instance: ((a <object>)), imp: (0); return 0
+(next-method)  ;; no next function, so an error
 
 (define-method fran ((a <object>) n) (* n 1))
 (define-method fran ((a <foo>) n) (* n 2))
@@ -136,9 +138,9 @@
 
 (fran b1 10)
 
-(next-function b1 100)  ;; next in order is instance: ((a foo) n), imp: (* n 2); return 200
-(next-function b1 100)  ;; next in order is instance: ((a <object>) n), imp: (n); return 100
-(next-function b1 100)  ;; no next function, so an error
+(next-method b1 100)  ;; next in order is instance: ((a foo) n), imp: (* n 2); return 200
+(next-method b1 100)  ;; next in order is instance: ((a <object>) n), imp: (n); return 100
+(next-method b1 100)  ;; no next function, so an error
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

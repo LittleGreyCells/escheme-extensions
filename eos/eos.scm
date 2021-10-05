@@ -8,9 +8,9 @@
 ;;    (define-class <name> <type> <slots>)
 ;;    (define-method <name> <formals> <body>)
 ;;    (make <type> [<value> ...])
-;;    (slot-ref <slot-name> <instance>)
-;;    (slot-set! <slot-name> <instance> <value>)
-;;    (next-function [<sexpr> ...])
+;;    (slot-ref <instance> <slot-name>)
+;;    (slot-set! <instance> <slot-name> <value>)
+;;    (next-method [<sexpr> ...])
 ;;
 ;;    Where:
 ;;       <name> := scheme symbol
@@ -42,7 +42,7 @@
 ;;      assigns value to a slot of <object>.
 ;;      does not check for assignment compatibility.
 ;;
-;;    function next-function
+;;    function next-method
 ;;      call the next conforming method.
 ;;      if not arguments are supplied, use the existing arguments.
 ;;      new arguments can be specified -- caution: guarantee type conformance.
@@ -581,7 +581,7 @@
 ;; syntax: (cv-sort2 v vlen)
 ;; syntax: (cv-sort)
 ;; syntax: (gf-dispatch n-entries args)
-;; syntax: (next-function)
+;; syntax: (next-method)
 ;;
 
 ;;
@@ -692,9 +692,9 @@
 ;; NEXT FUNCTION
 ;;
 
-(define next-function
+(define next-method
   (lambda args
-    ;; we only sort the candiates, if next-function is called
+    ;; we only sort the candiates, if next-method is called
     (if (= cv-current 0)
 	(begin 
 	  (cv-sort) 
@@ -733,7 +733,7 @@
     (make-accessor-name "%set-" (cadr form))))
 
 ;;
-;; (make <class> [init-args ...])
+;; (make <class> [<args> ...])
 ;;
 
 (define-method init ((this <object>)))

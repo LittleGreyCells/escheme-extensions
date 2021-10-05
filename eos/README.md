@@ -50,9 +50,9 @@ it will be called to check the assigned value.
    (define-class <name> <base-type> <slots>)  -> <name>      (macro)  
    (define-method <name> <formals> <body>)    -> <function>  (macro)
    (make <type> {<value>)}*)                  -> <instance>  (macro)   
-   (next-function {<sexpr>}* )                -> <sexpr>     (method)
    (slot-ref <slot-name> <instance>)          -> <value>     (macro)
    (slot-set! <slot-name> <instance> <value>) -> <value>     (macro)
+   (next-method {<sexpr>}* )                  -> <sexpr>     (method)
 
    Where:
       <name> := <symbol>
