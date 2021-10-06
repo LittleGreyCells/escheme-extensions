@@ -47,24 +47,23 @@ it will be called to check the assigned value.
 ## Grammar
 
 ```
-   (define-class <name> <base-type> <slots>)  -> <name>      (macro)  
-   (define-method <name> <formals> <body>)    -> <function>  (macro)
-   (make <type> {<value>)}*)                  -> <instance>  (macro)   
-   (slot-ref <slot-name> <instance>)          -> <value>     (macro)
-   (slot-set! <slot-name> <instance> <value>) -> <value>     (macro)
-   (next-method {<sexpr>}* )                  -> <sexpr>     (method)
+   (define-class <name> <base-type> <slots>)   -> <name>      (macro)  
+   (define-method <name> <formals> <body>)     -> <function>  (macro)
+   (make <type> {<value>)}*)                   -> <instance>  (function)   
+   (slot-ref <instance> '<slot-name>)          -> <value>     (function)
+   (slot-set! <instance> '<slot-name> <value>) -> <value>     (function)
+   (next-method {<sexpr>}* )                   -> <sexpr>     (function)
 
    Where:
       <name> := <symbol>
       <base-type> := <type> 
       <sexpr> := escheme symbolic expression
       <value> := <sexpr>
-      <slot> := ( <slot-name> <type> [<value-guard>]) | <slot-name>
+      <slot> := ( <slot-name> <type> [<value>] ) | <slot-name>
       <slots> := {<slot>}*
       <function> := <closure>
       <type> := name of eos class type
       <slot-name> := <symbol>
-      <value-guard> := predicate function
       <formals> := (<formal> ...)
       <formal> := (<name> <type>) | <name>
       <body> := {<sexpr>*}

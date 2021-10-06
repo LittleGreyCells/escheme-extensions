@@ -29,9 +29,13 @@
 (define foo1 (make <foo> 10))
 (object-bindings foo1)
 
-;; define class <foo2> like foo, but explicitely type its slot var
-(define-class <foo2> <object> ((x <object>)))
+;; define class <foo2> like foo, but provide an init value for slot var
+(define-class <foo2> <object> ((x <object> (+ 1 2 3))))
 (class-show <foo2>)
+(define f2 (make <foo2>))
+(define f2a (make <foo2>))
+(object-bindings f2)
+(object-bindings f2a)
 
 ;; define class <bar> deriving from <foo>; introduce new slot of type <object>
 (define-class <bar> <foo> (y))
@@ -70,14 +74,8 @@
 ;;   
 
 (define-method mary ((a <foo>)) 1)        ;; ok, exact
-(generic-functions-show)
-
 (define-method mary ((a <bar>)) 2)        ;; ok, bar -> foo
-(generic-functions-show)
-
 (define-method sam (x y z) (+ x y z))
-(generic-functions-show)
-
 (define-method gil (x) x)
 (generic-functions-show)
 
@@ -92,12 +90,13 @@
 ;; define class <integer> deriving from <object>
 ;;   it has a member x of any type, but has a type predicate integer? to be applied
 ;;   when instances are created
-(define-class <integer> <object> ((x <object> integer? 0)))
+(define-class <integer> <object> ((x <object> 0)))
 (class-show <integer>)
 (define-method init ((this <integer>) n) ((setter x) this n))
 
 ;; let's make some instances
 (define f1 (make <foo>))
+(define f2 (make <integer>))
 (define f3 (make <integer> 10))
 
 (object-class f1)
@@ -105,10 +104,11 @@
 
 ;; show slots and bound values
 (object-bindings f1)
+(object-bindings f2)
 (object-bindings f3)
 
-(slot-set! f3 x 20)
-(slot-ref f3 x)
+(slot-set! f3 'x 20)
+(slot-ref f3 'x)
 
 ;; show slots and bound values
 (object-bindings f3)
@@ -148,12 +148,12 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; define an <integer> class with value-guard "integer?"
-(define-class <integer> <object> ((value <object> integer?)))
+;; define an <integer> class
+(define-class <integer> <object> ((value <object>)))
 (define-method init ((this <integer>) n) ((setter value) this n))
 
 ;; define a <real> class
-(define-class <real> <object> ((value <object> real?)))
+(define-class <real> <object> ((value <object>)))
 (define-method init ((this <real>) n) ((setter value) this n))
 
 (generic-functions-show)
@@ -176,6 +176,13 @@
 (define x3 (add x1 x2))
 (define y3 (add y1 y2))
 
+(object-bindings x1)
+(object-bindings x2)
+(object-bindings y1)
+(object-bindings y2)
+(object-bindings x3)
+(object-bindings y3)
+
 (define z3 (add x1 y2))    ;; an error--no such implemenation 
                            ;;   (+ <integer> <real>)
 (define z4 (add y2 x1))    ;; an error--no such implemenation 
@@ -191,6 +198,9 @@
 
 (define z3 (add x1 y2))    ;; no longer an error
 (define z4 (add y2 x1))    ;; no longer an error
+
+(object-bindings z3)
+(object-bindings z4)
 
 (print (list (value x1)
 	     (value y2)

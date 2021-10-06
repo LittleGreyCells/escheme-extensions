@@ -8,15 +8,16 @@
 ;;    (define-class <name> <type> <slots>)
 ;;    (define-method <name> <formals> <body>)
 ;;    (make <type> [<value> ...])
-;;    (slot-ref <instance> <slot-name>)
-;;    (slot-set! <instance> <slot-name> <value>)
+;;    (slot-ref <instance> '<slot-name>)
+;;    (slot-set! <instance> '<slot-name> <value>)
 ;;    (next-method [<sexpr> ...])
 ;;
 ;;    Where:
 ;;       <name> := scheme symbol
 ;;       <type> := eos class type
 ;;       <slots> := ( <slot> ... )
-;;       <slot> := ( <name> <type> [<value-guard>]) | <name>
+;;       <slot> := ( <slot-name> <type> [<value>] ) | <slot-name>
+;;       <slot-name> := <name>
 ;;       <formals> := (<formal> ...)
 ;;       <formal> := ( <name> <type> ) | <name>
 ;;       <body> := [<sexpr> ...]
@@ -31,14 +32,14 @@
 ;;      creates an implementation of generic function <name>.
 ;;      creates a generic function entry, if one does not exist.
 ;;
-;;    macro make
+;;    function make
 ;;      creates and returns an <instance> of <type>.
 ;;      values are passed to an init method which should be defined for each <type>.
 ;;
-;;    macro slot-ref
+;;    function slot-ref
 ;;      references and returns a slot value of <object>.
 ;;
-;;    macro slot-set!
+;;    function slot-set!
 ;;      assigns value to a slot of <object>.
 ;;      does not check for assignment compatibility.
 ;;
@@ -121,10 +122,14 @@
       (display (class-get-name (cdr pair))))
     (display " ")
     (display (cadr x))
-    (display " ")
-    (display (caddr x))
     (display ")")
     (newline)))
+
+(define slot-init
+  (lambda (x)
+    (let ((pair (car x)))
+      (print (list "slot-init" (car pair) v))
+      )))
 
 (define class-show
   (lambda (x)
@@ -163,7 +168,16 @@
 (define make-object
   (lambda (<class>)
     (let ((env (%make-environment (class-get-vars <class>) (the-global-environment))))
-      (cons <class> env))))
+      (let ((obj (cons <class> env)))
+	(map
+	 (lambda (x)
+	   (let ((name (caar x))
+		 (value (cadr x)))
+	     (if (not (null? value))
+		 (slot-set! obj name value))
+	     ))
+	 (class-get-slots <class>))
+	obj))))
 
 (define object?
   (lambda (x)
@@ -234,7 +248,7 @@
 ;;
 
 ;;
-;; parsed-slots -> (((<slot-name> . <type>) <value-guard-function>) ...)
+;; parsed-slots -> (((<slot-name> . <type>) <value>) ...)
 ;;
 
 (define parse-slot
@@ -245,25 +259,15 @@
 	  ((pair? slot)
 	   (let ((sname (car slot))
 		 (stype (cadr slot))
-		 (sguard (caddr slot))
-		 (svalue (cadddr slot)))
+		 (svalue (caddr slot)))
 	     (if (not (symbol? sname))
 		 (error "parse-slot--slot name not a symbol" slot)
 		 (let ((type (%symbol-value stype))
-		       guard
 		       value)
-		   (if (null? sguard)
-		       (set! guard nil)
-		       (if (not (bound? sguard))
-			   (error "parse-slot--symbol is unboud" sguard)
-			   (begin
-			     (set! guard (%symbol-value sguard))
-			     (if (not (procedure? guard))
-				 (error "parse-slot--value-guard not a procedure")))))
 		   (set! value (eval svalue))
 		   (if (not (class? type))
 		       (error "parse-slot--slot type is not a class" stype))
-		   (list (CONS sname type) sguard value)))))
+		   (list (CONS sname type) value)))))
 	  (else
 	   (error "parse-slot--not a well-formed slot")))))
 
@@ -285,16 +289,12 @@
 (define setter-error (lambda (x) (error "setter value incorrect type" x)))
     
 (define generate-setter
-  (lambda (class slot guard)
+  (lambda (class slot)
     ;; closure = (lambda (x v) (set! (access <slot-var> (object-env x)) v))
     (let ((name (setter-name (car slot)))
 	  (params (list (list 'this (class-get-name class)) (list 'val (class-get-name (cdr slot)))))
 	  body)
-      (if (null? guard)
-	  (set! body `((set! (access ,(car slot) (object-env this)) 
-			     val)))
-	  (set! body `((set! (access ,(car slot) (object-env this)) 
-			     (if (,guard val) val (setter-error val))))))
+      (set! body `((set! (access ,(car slot) (object-env this)) val)))
       (fn:define-method name params body))))
 
 (define parse-super
@@ -311,14 +311,13 @@
       (let ((cx (make-class class super parsed-slots)))
 	(class-set-vars cx (class-generate-vars cx))
 	(%set-symbol-value! class cx)
-	;; parsed-slots = ( ((n . t) g) ((n . t) g) ... )
+	;; parsed-slots = ( ((n . t) v) ((n . t) v) ... )
 	(map
 	 (lambda (slot) 
-	   ;; slot = ((n . t) g)
-	   (let ((slot-name-type (car slot))
-		 (slot-guard (cadr slot)))
+	   ;; slot = ((n . t) v)
+	   (let ((slot-name-type (car slot)))
 	     (generate-getter cx slot-name-type)
-	     (generate-setter cx slot-name-type slot-guard)))
+	     (generate-setter cx slot-name-type)))
 	 parsed-slots)
 	class))))
 
@@ -738,30 +737,21 @@
 
 (define-method init ((this <object>)))
 
-(macro make
-  (lambda (form)
-    (let ((<class> (cadr form))
-	  (<args> (cddr form))
-	  (object (gensym "%%g")))
-      `(let ((,object (make-object ,<class>)))
-	 (init ,object ,@<args>)
-	 ,object)
-      )))
+(define make
+  (lambda (<class> . <args>)
+    (let ((obj (make-object <class>)))
+      (apply init (cons obj <args>))
+      obj)
+    ))
 
 ;;
 ;; Unchecked Slot Operations
 ;;
 
-(macro slot-ref
-  (lambda (form)
-    (let ((obj (cadr form))
-	  (slot (caddr form)))
-      `(access ,slot (object-env ,obj)))))
+(define slot-ref
+  (lambda (obj slot)
+    (eval `(access ,slot (object-env obj)) (the-environment))))
 
-(macro slot-set!
-  (lambda (form)
-    (let ((obj (cadr form))
-	  (slot (caddr form))
-	  (val (cadddr form)))
-      `(set! (access ,slot (object-env ,obj)) ,val))))
-
+(define slot-set!
+  (lambda (obj slot val)
+    (eval `(set! (access ,slot (object-env obj)) val) (the-environment))))

@@ -67,7 +67,7 @@
 ;;      arguments
 ;;
 
-(define-class <integer> <object> ((value <object> integer?)))
+(define-class <integer> <object> ((value <object>)))
 (define-method init ((this <integer>) n) ((setter value) this n)) 
 
 ;; we want to constrain a stack to only accept type integer
@@ -92,7 +92,7 @@
 ;; the following should cause an error
 (push stack2 'a)
 
-;; the following will not
+;; the following will not cause an error
 (push stack2 (make <integer> 100))
 
 (define v1 (pop stack2))
