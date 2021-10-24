@@ -13,12 +13,9 @@ In brief:
 
 + Classes define types whose instances consist of valued slots.
 + Generic functions define function patterns.
-+ Methods define implementations of generic functions. 
-    (EOS will define a generic function if one does not
-    already exist)
-+ Generic functions are called with varying argument lists
-    and the closest conforming method is chosen.
-    The chosen method is called with the supplied arguments.
++ Methods define implementations of generic functions. EOS will define a generic function if one does not
+already exist.
++ Generic functions are called with varying argument lists and the closest conforming method is chosen. Control is transferred to the chosen method  with the supplied arguments.
 
 In many object-systems, which are class-based, dispatch is based on the 
 first argument alone. In EOS all arguments, not just the first, participate 
