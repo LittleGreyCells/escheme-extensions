@@ -25,7 +25,7 @@ in selecting the generic function implementation.
 Multi-dispatch is expensive, but in practice the number of candidate methods
 is small. All the candidates must be ranked and the best matchinging candidate
 is chosen.  The next ranking candidate method can be called using the 
-support function "next-function". This is not quite the same as "send-super" 
+support function "next-method". This is not quite the same as "send-super" 
 but may under certain circumstances behave similarly.
 
 Slots are typically accessed via accessor methods that are automatically
@@ -40,9 +40,6 @@ Two non-method functions are also provided for accessing slots:
 (slot-ref <object> <slot-name>)
 (slot-set! <object> <slot-name> <value>)
 ```
-
-The advantage of using a setter method is that, if a value guard function is defined, 
-it will be called to check the assigned value.
 
 ## Grammar
 
