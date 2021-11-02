@@ -8,6 +8,7 @@
 ;;    (define-class <name> <type> <slots>)
 ;;    (define-method <name> <formals> <body>)
 ;;    (make <type> [<value> ...])
+;;    (init <instance> [<sexpr> ...])
 ;;    (slot-ref <instance> '<slot-name>)
 ;;    (slot-set! <instance> '<slot-name> <value>)
 ;;    (next-method [<sexpr> ...])
@@ -35,6 +36,10 @@
 ;;    function make
 ;;      creates and returns an <instance> of <type>.
 ;;      values are passed to an init method which should be defined for each <type>.
+;;
+;;    generic function init
+;;      an initilaizer function to be called by make after instance allocation with
+;;      any supplied arguments.
 ;;
 ;;    function slot-ref
 ;;      references and returns a slot value of <object>.
@@ -735,6 +740,7 @@
 ;; (make <class> [<args> ...])
 ;;
 
+;; create the init generic with trivial method
 (define-method init ((this <object>)))
 
 (define make
